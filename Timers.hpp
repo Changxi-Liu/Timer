@@ -8,15 +8,22 @@ Copyright
 
 #ifndef TIMER_H
 #define TIMER_H
-#include "lduMatrix.hpp"
+//#include "lduMatrix.hpp"
 
 #include <sys/time.h>
 //#include <iostream.h>
 #include <map>
 #include <string>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include<iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include "mpi.h"
+
 using namespace std;
-namespace CML
-{
 class Timer
 {
     public:    //get time
@@ -24,12 +31,32 @@ class Timer
         static map<string,double> timeSum ;
         static map<string,double> timeStart;
         static map<string,double> timeEnd;
+        static map<string,unsigned long> timeSum_asm ;
+        static map<string,unsigned long> timeStart_asm;
+        static map<string,unsigned long> timeEnd_asm;
+
         static map<string,int> count;
         void static startTimer(string in) ;
         static void endTimer(string in);
         ~Timer();
         static void printTimer();
         static void printTimer(string in) ;
+        void static startTimer_asm(string in) ;
+        static void endTimer_asm(string in);
+        static void printTimer_asm();
+        static void printTimer_asm(string in) ;
+        template<typename DTYPE>
+        static void Vector_Variance(DTYPE * vector, DTYPE * vector_compare, int size ) { 
+
+                DTYPE variance = 0;
+                DTYPE tmp;
+                for(int i = 0 ; i < size ; i++) {
+                tmp = ( vector_compare[i] - vector[i] ) ; 
+                variance += tmp * tmp ;
+                }
+                std::cout<<"Variance:"<<variance<<std::endl;
+        }
+
 
 
 };
@@ -38,6 +65,6 @@ class Timer
 //extern map<string,double> Timer::timeStart;
 //extern map<string,double> Timer::timeEnd;
 //extern map<string,int> Timer::count;
-}
+
 #endif
 
